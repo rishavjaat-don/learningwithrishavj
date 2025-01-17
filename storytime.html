@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Story Time Adventure</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .story-container {
+      background-color: white;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    h1 {
+      color: #4CAF50;
+    }
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #333;
+    }
+    .button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+      margin: 10px;
+    }
+    .button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="story-container">
+    <h1>Story Time Adventure</h1>
+    <p id="story-part">
+      Once upon a time, in a magical forest, there was a little girl named Lily. She loved exploring the woods. One day, she found two paths. One path led into a dark cave, and the other led towards a bright meadow. What should she do?
+    </p>
+    <button class="button" id="option1" onclick="nextPart1()">Go to the cave</button>
+    <button class="button" id="option2" onclick="nextPart2()">Go to the meadow</button>
+  </div>
+
+  <script>
+    // Function for the first option: Go to the cave
+    function nextPart1() {
+      document.getElementById('story-part').innerHTML = "Lily bravely enters the dark cave. As she walks deeper inside, she hears strange noises. Suddenly, she encounters a friendly dragon! The dragon offers to help her find hidden treasure. What should Lily do?";
+      document.getElementById('option1').innerHTML = "Ask the dragon for help";
+      document.getElementById('option2').innerHTML = "Explore the cave alone";
+      document.getElementById('option1').setAttribute("onclick", "nextPart3()");
+      document.getElementById('option2').setAttribute("onclick", "nextPart4()");
+    }
+
+    // Function for the second option: Go to the meadow
+    function nextPart2() {
+      document.getElementById('story-part').innerHTML = "Lily walks through the meadow, enjoying the sunshine. She sees a sparkling river ahead and a strange creature sitting on a rock by the river. The creature invites her to play a game. What should Lily do?";
+      document.getElementById('option1').innerHTML = "Play the game with the creature";
+      document.getElementById('option2').innerHTML = "Cross the river to explore further";
+      document.getElementById('option1').setAttribute("onclick", "nextPart5()");
+      document.getElementById('option2').setAttribute("onclick", "nextPart6()");
+    }
+
+    // Function for asking the dragon for help
+    function nextPart3() {
+      document.getElementById('story-part').innerHTML = "The dragon guides Lily to a secret cave filled with treasures! She also finds a magical map leading to an enchanted forest. Should Lily follow the map or stay with the dragon?";
+      document.getElementById('option1').innerHTML = "Follow the map";
+      document.getElementById('option2').innerHTML = "Stay with the dragon";
+      document.getElementById('option1').setAttribute("onclick", "nextPart7()");
+      document.getElementById('option2').setAttribute("onclick", "nextPart8()");
+    }
+
+    // Function for exploring the cave alone
+    function nextPart4() {
+      document.getElementById('story-part').innerHTML = "Lily ventures deeper into the cave alone. She stumbles upon a glowing crystal that grants her magical powers! What should she do next?";
+      document.getElementById('option1').innerHTML = "Use the powers to fly out";
+      document.getElementById('option2').innerHTML = "Take the crystal home";
+      document.getElementById('option1').setAttribute("onclick", "nextPart9()");
+      document.getElementById('option2').setAttribute("onclick", "nextPart10()");
+    }
+
+    // Function for playing the game with the creature
+    function nextPart5() {
+      document.getElementById('story-part').innerHTML = "Lily and the creature play a fun game, and the creature rewards her with a magical flower. It glows and shows the way to a hidden garden. Should Lily follow it or go home?";
+      document.getElementById('option1').innerHTML = "Follow the glowing flower";
+      document.getElementById('option2').innerHTML = "Take the flower home";
+      document.getElementById('option1').setAttribute("onclick", "nextPart11()");
+      document.getElementById('option2').setAttribute("onclick", "nextPart12()");
+    }
+
+    // Function for crossing the river
+    function nextPart6() {
+      document.getElementById('story-part').innerHTML = "Lily crosses the river and discovers an ancient tree with carvings on its trunk. The carvings tell a story about a hidden treasure nearby. Should Lily search for it?";
+      document.getElementById('option1').innerHTML = "Search for the treasure";
+      document.getElementById('option2').innerHTML = "Climb the tree for a better view";
+      document.getElementById('option1').setAttribute("onclick", "nextPart13()");
+      document.getElementById('option2').setAttribute("onclick", "nextPart14()");
+    }
+
+    // Endings
+    function nextPart7() { endStory("Lily follows the map and discovers an enchanted forest full of magical creatures. She decides to live there happily forever. The End!"); }
+    function nextPart8() { endStory("Lily stays with the dragon and becomes its best friend. They guard the treasure together. The End!"); }
+    function nextPart9() { endStory("Using her new powers, Lily flies out of the cave and becomes a magical adventurer. The End!"); }
+    function nextPart10() { endStory("Lily takes the crystal home and shares its magic with her village. The End!"); }
+    function nextPart11() { endStory("Lily follows the glowing flower and finds a hidden garden filled with wonders. She becomes its guardian. The End!"); }
+    function nextPart12() { endStory("Lily takes the flower home and uses its magic to brighten her house. The End!"); }
+    function nextPart13() { endStory("Lily finds the treasure and becomes the happiest adventurer in the land. The End!"); }
+    function nextPart14() { endStory("Climbing the tree, Lily enjoys the beautiful view of the magical forest. She feels at peace. The End!"); }
+
+    // End Story Function
+    function endStory(text) {
+      document.getElementById('story-part').innerHTML = text;
+      document.getElementById('option1').style.display = "none";
+      document.getElementById('option2').style.display = "none";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shape Match Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #4caf50;
+        }
+
+        .game-container {
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        .shape {
+            width: 100px;
+            height: 100px;
+            margin: 20px auto;
+        }
+
+        /* Shape Styles */
+        .circle {
+            background-color: #ff6f61;
+            border-radius: 50%;
+        }
+
+        .square {
+            background-color: #42a5f5;
+        }
+
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 100px solid #ffb74d;
+        }
+
+        .rectangle {
+            width: 150px;
+            height: 100px;
+            background-color: #8e44ad;
+        }
+
+        .pentagon {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 50px 86.6px 50px;
+            border-color: transparent transparent #f39c12 transparent;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .pentagon:after {
+            content: "";
+            position: absolute;
+            top: 26px;
+            left: -50px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 40px 50px 0 50px;
+            border-color: #f39c12 transparent transparent transparent;
+        }
+
+        .oval {
+            width: 150px;
+            height: 100px;
+            background-color: #e74c3c;
+            border-radius: 50%;
+        }
+
+        .hexagon {
+            width: 100px;
+            height: 55px;
+            background-color: #9b59b6;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .hexagon:before, .hexagon:after {
+            content: "";
+            position: absolute;
+            width: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+        }
+
+        .hexagon:before {
+            top: -25px;
+            border-bottom: 25px solid #9b59b6;
+        }
+
+        .hexagon:after {
+            bottom: -25px;
+            border-top: 25px solid #9b59b6;
+        }
+
+        .trapezoid {
+            width: 120px;
+            height: 0;
+            border-bottom: 60px solid #e67e22;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+        }
+
+        .octagon {
+            background-color: #2ecc71;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+
+        .crescent {
+            background-color: #3498db;
+            clip-path: circle(50%) inset 10px 0 0 10px;
+        }
+
+        .heart {
+            background-color: #e74c3c;
+            clip-path: polygon(50% 10%, 20% 40%, 50% 80%, 80% 40%);
+        }
+
+        .arrow {
+            background-color: #f39c12;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+
+        .cross {
+            background-color: #9b59b6;
+            clip-path: polygon(30% 0, 70% 0, 70% 30%, 100% 30%, 100% 70%, 70% 70%, 70% 100%, 30% 100%, 30% 70%, 0% 70%, 0% 30%, 30% 30%);
+        }
+
+        .spiral {
+            width: 100px;
+            height: 100px;
+            background: conic-gradient(#ff6f61 0%, #42a5f5 25%, #e74c3c 50%, #f1c40f 75%);
+            border-radius: 50%;
+        }
+
+        .parallelogram {
+            width: 120px;
+            height: 60px;
+            background: #2ecc71;
+            transform: skew(20deg);
+        }
+
+        .diamond {
+            width: 0;
+            height: 0;
+            border: 50px solid transparent;
+            border-bottom: 50px solid #3498db;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .diamond:after {
+            content: "";
+            position: absolute;
+            top: 50px;
+            left: -50px;
+            width: 0;
+            height: 0;
+            border: 50px solid transparent;
+            border-top: 50px solid #3498db;
+        }
+
+        .answer-button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .answer-button:hover {
+            background-color: #388e3c;
+        }
+
+        #result {
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        #next-button {
+            background-color: #007bff;
+        }
+
+        #next-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Shape Match Game</h1>
+<div class="game-container">
+    <div id="shape-container" class="shape">
+        <!-- Shapes will appear here dynamically -->
+    </div>
+
+    <div id="answers-container">
+        <!-- Answer buttons will appear here dynamically -->
+    </div>
+
+    <div id="result"></div>
+    <button id="next-button" style="display:none;" class="answer-button" onclick="nextShape()">Next Shape</button>
+</div>
+
+<script>
+    const shapes = [
+        { type: 'circle', name: 'Circle' },
+        { type: 'square', name: 'Square' },
+        { type: 'triangle', name: 'Triangle' },
+        { type: 'rectangle', name: 'Rectangle' },
+        { type: 'pentagon', name: 'Pentagon' },
+        { type: 'oval', name: 'Oval' },
+        { type: 'hexagon', name: 'Hexagon' },
+        { type: 'parallelogram', name: 'Parallelogram' },
+        { type: 'diamond', name: 'Diamond' },
+        { type: 'trapezoid', name: 'Trapezoid' },
+        { type: 'octagon', name: 'Octagon' },
+        { type: 'crescent', name: 'Crescent' },
+        { type: 'heart', name: 'Heart' },
+        { type: 'arrow', name: 'Arrow' },
+        { type: 'cross', name: 'Cross' },
+        { type: 'spiral', name: 'Spiral' }
+    ];
+
+    let currentShapeIndex = 0;
+    let score = 0;
+
+    function loadShape() {
+        const shapeObj = shapes[currentShapeIndex];
+
+        // Display the shape
+        const shapeContainer = document.getElementById('shape-container');
+        shapeContainer.className = `shape ${shapeObj.type}`;
+
+        // Generate 3 random incorrect options
+        const incorrectOptions = shapes
+            .filter(s => s.name !== shapeObj.name)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3)
+            .map(s => s.name);
+
+        // Combine correct answer with incorrect ones
+        const answers = [shapeObj.name, ...incorrectOptions].sort(() => Math.random() - 0.5);
+
+        // Create answer buttons
+        document.getElementById('answers-container').innerHTML = answers.map(answer =>
+            `<button class="answer-button" onclick="checkAnswer('${answer}')">${answer}</button>`
+        ).join('');
+    }
+
+    function checkAnswer(selectedAnswer) {
+        const correctAnswer = shapes[currentShapeIndex].name;
+        const resultContainer = document.getElementById('result');
+
+        if (selectedAnswer === correctAnswer) {
+            score++;
+            resultContainer.textContent = 'Correct!';
+        } else {
+            resultContainer.textContent = `Incorrect. The correct answer is ${correctAnswer}.`;
+        }
+
+        document.getElementById('next-button').style.display = 'inline-block';
+    }
+
+    function nextShape() {
+        currentShapeIndex++;
+        if (currentShapeIndex < shapes.length) {
+            loadShape();
+            document.getElementById('result').textContent = '';
+            document.getElementById('next-button').style.display = 'none';
+        } else {
+            document.querySelector('.game-container').innerHTML = `<h2>Game Over! Your score: ${score} / ${shapes.length}</h2>`;
+        }
+    }
+
+    loadShape();
+</script>
+
+</body>
+</html>

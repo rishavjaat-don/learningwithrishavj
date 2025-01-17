@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quiz Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2e7d32;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin: 20px 0;
+        }
+
+        .answer-button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        #next-button {
+            background-color: #007bff;
+        }
+
+        #next-button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>Math Quiz Game</h1>
+
+<div id="quiz-container">
+    <div id="question-container" class="question">
+        <!-- Question will appear here -->
+    </div>
+
+    <div id="answers-container">
+        <!-- Answer options will appear here -->
+    </div>
+
+    <div id="result"></div>
+    <button id="next-button" style="display:none;" class="answer-button" onclick="nextQuestion()">Next Question</button>
+</div>
+
+<script>
+    const questions = [
+        { question: "5 + 3", answer: 8 },
+        { question: "9 - 4", answer: 5 },
+        { question: "7 + 2", answer: 9 },
+        { question: "6 - 1", answer: 5 },
+        { question: "12 + 7", answer: 19 },
+        { question: "8 + 6", answer: 14 },
+        { question: "15 - 8", answer: 7 },
+        { question: "3 + 6", answer: 9 },
+        { question: "10 + 4", answer: 14 },
+        { question: "20 - 6", answer: 14 },
+        { question: "13 + 5", answer: 18 },
+        { question: "13 - 5", answer: 8 },
+        { question: "5 + 6", answer: 11 },
+        { question: "4 + 9", answer: 13 },
+        { question: "10 - 7", answer: 3 },
+        { question: "3 + 12", answer: 15 },
+        { question: "11 + 7", answer: 18 },
+        { question: "14 - 5", answer: 9 },
+        { question: "8 + 5", answer: 13 },
+        { question: "6 + 4", answer: 10 },
+        { question: "17 - 9", answer: 8 },
+        { question: "9 + 6", answer: 15 },
+        { question: "13 + 3", answer: 16 },
+        { question: "2 + 3", answer: 5 },
+        { question: "7 + 8", answer: 15 },
+        { question: "15 - 4", answer: 11 },
+        { question: "5 + 10", answer: 15 },
+        { question: "8 - 3", answer: 5 },
+        { question: "6 + 8", answer: 14 },
+        { question: "14 + 2", answer: 16 }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const questionObj = questions[currentQuestionIndex];
+        document.getElementById("question-container").textContent = `What is ${questionObj.question}?`;
+
+        const correctAnswer = questionObj.answer;
+
+        // Generate a set of answers including the correct answer
+        const answerChoices = [correctAnswer];
+
+        // Generate 3 random incorrect answers
+        while (answerChoices.length < 4) {
+            let randomAnswer = correctAnswer + (Math.floor(Math.random() * 5) - 2); // Randomize slightly
+            if (!answerChoices.includes(randomAnswer)) {
+                answerChoices.push(randomAnswer);
+            }
+        }
+
+        // Shuffle the answers
+        answerChoices.sort(() => Math.random() - 0.5);
+
+        // Create answer buttons
+        const answerButtons = answerChoices.map(answer => {
+            return `<button class="answer-button" onclick="checkAnswer(${answer})">${answer}</button>`;
+        });
+
+        document.getElementById("answers-container").innerHTML = answerButtons.join('');
+    }
+
+    function checkAnswer(selectedAnswer) {
+        const correctAnswer = questions[currentQuestionIndex].answer;
+        if (selectedAnswer === correctAnswer) {
+            score++;
+            document.getElementById("result").textContent = "Correct!";
+        } else {
+            document.getElementById("result").textContent = `Incorrect. The correct answer is ${correctAnswer}.`;
+        }
+
+        document.getElementById("next-button").style.display = "inline-block";
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+            document.getElementById("result").textContent = "";
+            document.getElementById("next-button").style.display = "none";
+        } else {
+            document.getElementById("quiz-container").innerHTML = `<h2>Game Over! Your score: ${score} / ${questions.length}</h2>`;
+        }
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>

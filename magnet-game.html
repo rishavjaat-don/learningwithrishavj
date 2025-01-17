@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magnet Name Collector</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .game-container {
+            position: relative;
+            width: 400px;
+            height: 600px;
+            background-color: #fff;
+            border: 3px solid #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .letter {
+            width: 30px;
+            height: 30px;
+            background-color: silver;
+            color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            position: absolute;
+            top: -40px;
+        }
+
+        .magnet {
+            width: 80px;
+            height: 40px;
+            background-color: red;
+            border-radius: 10px;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .input-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <div class="input-container">
+            <input type="text" id="nameInput" placeholder="Enter your name">
+            <button onclick="startGame()">Start</button>
+        </div>
+        <div class="magnet" id="magnet"></div>
+    </div>
+
+    <script>
+        const magnet = document.getElementById('magnet');
+        const container = document.querySelector('.game-container');
+        const body = document.body;
+        let magnetPosition = 160; // Starting position of the magnet
+        const magnetSpeed = 10; // Speed at which the magnet moves
+        const fallingSpeed = 2; // Speed of letters falling
+        const stoppedLetters = new Set(); // To track letters that have stopped
+
+        // Move the magnet left or right
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                magnetPosition = Math.max(magnetPosition - magnetSpeed, 0);
+            } else if (e.key === 'ArrowRight') {
+                magnetPosition = Math.min(magnetPosition + magnetSpeed, container.clientWidth - magnet.clientWidth);
+            }
+            magnet.style.left = `${magnetPosition}px`;
+        });
+
+        function startGame() {
+            const nameInput = document.getElementById('nameInput').value;
+            const letters = nameInput.split('');
+
+            // Clear existing letters
+            document.querySelectorAll('.letter').forEach(letter => letter.remove());
+
+            // Create falling letters
+            letters.forEach((char, index) => {
+                const letter = document.createElement('div');
+                letter.classList.add('letter');
+                letter.style.left = `${Math.random() * (container.clientWidth - 30)}px`; // Random position
+                letter.textContent = char;
+                container.appendChild(letter);
+
+                let position = -40; // Start position above the container
+
+                // Falling behavior
+                const fallInterval = setInterval(() => {
+                    const letterRect = letter.getBoundingClientRect();
+                    const magnetRect = magnet.getBoundingClientRect();
+
+                    // Check if the letter is within magnet range
+                    if (
+                        letterRect.bottom >= magnetRect.top &&
+                        letterRect.left < magnetRect.right &&
+                        letterRect.right > magnetRect.left
+                    ) {
+                        stoppedLetters.add(letter); // Mark as stopped
+                        letter.style.backgroundColor = "gold"; // Show as collected
+                        clearInterval(fallInterval); // Stop the letter from falling
+                    }
+
+                    // If the letter is not stopped, it continues falling
+                    if (!stoppedLetters.has(letter)) {
+                        position += fallingSpeed;
+                        letter.style.top = `${position}px`;
+                    }
+
+                    // If letter goes out of bounds, reset to top
+                    if (position > container.clientHeight) {
+                        position = -40;
+                        letter.style.left = `${Math.random() * (container.clientWidth - 30)}px`; // Randomize position
+                    }
+
+                    // Stop the game when all letters are stopped
+                    if (stoppedLetters.size === letters.length) {
+                        stopGame();
+                    }
+                }, 20);
+            });
+        }
+
+        // Stop the game and change the background to green
+        function stopGame() {
+            body.style.backgroundColor = 'green'; // Change background color to green
+            alert("Congratulations! You collected all the letters!");
+        }
+    </script>
+
+</body>
+</html>

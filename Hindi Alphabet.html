@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hindi Alphabet Practice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #4CAF50;
+    }
+    .alphabet-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .alphabet-card {
+      background-color: #ffffff;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .alphabet-card:hover {
+      background-color: #f0f0f0;
+    }
+    #feedback {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    #next-button {
+      display: none;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    #next-button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Learn and Practice Hindi Alphabets</h1>
+  <p id="question">Click on the correct letter for the sound "क"</p>
+  
+  <div class="alphabet-grid" id="alphabet-grid">
+    <!-- Alphabet cards will be dynamically added here -->
+  </div>
+  
+  <p id="feedback"></p>
+  <button id="next-button" onclick="nextQuestion()">Next</button>
+  
+  <script>
+    // Full set of Hindi alphabets
+    const hindiAlphabets = [
+      "अ", "आ", "इ", "ई", "उ", "ऊ", "ऋ", "ए", "ऐ", "ओ", "औ", 
+      "क", "ख", "ग", "घ", "ङ", "च", "छ", "ज", "झ", "ञ", 
+      "ट", "ठ", "ड", "ढ", "ण", "त", "थ", "द", "ध", "न", 
+      "प", "फ", "ब", "भ", "म", "य", "र", "ल", "व", "श", 
+      "ष", "स", "ह", "क्ष", "त्र", "ज्ञ"
+    ];
+
+    // Generate questions dynamically
+    const questions = hindiAlphabets.map(letter => ({
+      sound: letter,
+      options: shuffleArray([...generateOptions(letter), letter]),
+      answer: letter
+    }));
+
+    let currentQuestionIndex = 0;
+
+    // Check Answer
+    function checkAnswer(selected) {
+      const correctAnswer = questions[currentQuestionIndex].answer;
+      const feedback = document.getElementById('feedback');
+      const nextButton = document.getElementById('next-button');
+      if (selected === correctAnswer) {
+        feedback.textContent = "Correct! Well done.";
+        feedback.style.color = "green";
+        nextButton.style.display = "inline-block";
+      } else {
+        feedback.textContent = "Incorrect! Try again.";
+        feedback.style.color = "red";
+      }
+    }
+
+    // Load Next Question
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex >= questions.length) {
+        document.getElementById('question').textContent = "You've completed the practice!";
+        document.getElementById('alphabet-grid').style.display = "none";
+        document.getElementById('next-button').style.display = "none";
+        return;
+      }
+      const question = questions[currentQuestionIndex];
+      document.getElementById('question').textContent = `Click on the correct letter for the sound "${question.sound}"`;
+      document.getElementById('feedback').textContent = "";
+      document.getElementById('next-button').style.display = "none";
+      loadOptions(question.options);
+    }
+
+    // Load options dynamically
+    function loadOptions(options) {
+      const grid = document.getElementById('alphabet-grid');
+      grid.innerHTML = "";
+      options.forEach(option => {
+        const card = document.createElement('div');
+        card.className = 'alphabet-card';
+        card.textContent = option;
+        card.onclick = () => checkAnswer(option);
+        grid.appendChild(card);
+      });
+    }
+
+    // Generate random options excluding the correct answer
+    function generateOptions(correctAnswer) {
+      const options = new Set();
+      while (options.size < 3) {
+        const randomLetter = hindiAlphabets[Math.floor(Math.random() * hindiAlphabets.length)];
+        if (randomLetter !== correctAnswer) {
+          options.add(randomLetter);
+        }
+      }
+      return Array.from(options);
+    }
+
+    // Shuffle array
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    // Initialize first question
+    nextQuestion();
+  </script>
+</body>
+</html>

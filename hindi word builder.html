@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hindi Word Builder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f9f9f9;
+      padding: 20px;
+    }
+    h1 {
+      color: #4CAF50;
+    }
+    .letter-grid, .answer-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .letter-card, .answer-card {
+      background-color: #ffffff;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .letter-card:hover {
+      background-color: #f0f0f0;
+    }
+    #feedback {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    #next-button, #reset-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      display: none;
+    }
+    #next-button:hover, #reset-button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hindi Word Builder</h1>
+  <p id="instruction">Build the word: <strong id="target-word">नमस्ते</strong></p>
+  
+  <div class="letter-grid" id="letter-grid"></div>
+  <div class="answer-grid" id="answer-grid"></div>
+  
+  <p id="feedback"></p>
+  <button id="reset-button" onclick="resetCurrentQuestion()">Reset</button>
+  <button id="next-button" onclick="nextQuestion()">Next</button>
+
+  <script>
+    // List of 30 words for the game
+    const words = [
+      "नमस्ते", "भारत", "ज्ञान", "शिक्षा",
+      "पुस्तक", "विद्यालय", "मित्र", "सत्य", "धन्यवाद",
+      "प्रकृति", "सूरज", "चंद्रमा", "तारा", "पानी",
+      "हवा", "पृथ्वी", "आकाश", "पेड़", "पुष्प",
+      "संगीत", "नदी", "समुद्र", "परिवार", "सपना",
+      "खुशी", "प्रेम", "अनुशासन", "आनंद", "स्वास्थ्य"
+    ];
+
+    let currentQuestionIndex = 0;
+    let userAnswer = [];
+
+    // Shuffle letters in a word
+    function shuffle(word) {
+      const letters = word.split('');
+      for (let i = letters.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [letters[i], letters[j]] = [letters[j], letters[i]];
+      }
+      return letters;
+    }
+
+    // Load the current question
+    function loadQuestion() {
+      const targetWord = words[currentQuestionIndex];
+      const scrambledLetters = shuffle(targetWord);
+      userAnswer = [];
+
+      document.getElementById('instruction').textContent = `Build the word: ${targetWord}`;
+      document.getElementById('letter-grid').innerHTML = "";
+      document.getElementById('answer-grid').innerHTML = "";
+      document.getElementById('feedback').textContent = "";
+      document.getElementById('next-button').style.display = "none";
+      document.getElementById('reset-button').style.display = "none";
+
+      scrambledLetters.forEach(letter => {
+        const letterCard = document.createElement('div');
+        letterCard.className = 'letter-card';
+        letterCard.textContent = letter;
+        letterCard.onclick = () => addToAnswer(letter, letterCard);
+        document.getElementById('letter-grid').appendChild(letterCard);
+      });
+    }
+
+    // Add letter to the answer grid
+    function addToAnswer(letter, letterCard) {
+      userAnswer.push(letter);
+      letterCard.style.display = "none";
+
+      const answerCard = document.createElement('div');
+      answerCard.className = 'answer-card';
+      answerCard.textContent = letter;
+      document.getElementById('answer-grid').appendChild(answerCard);
+
+      checkAnswer();
+    }
+
+    // Check if the answer is correct
+    function checkAnswer() {
+      const targetWord = words[currentQuestionIndex];
+      const feedback = document.getElementById('feedback');
+      const resetButton = document.getElementById('reset-button');
+      const nextButton = document.getElementById('next-button');
+
+      if (userAnswer.join('') === targetWord) {
+        feedback.textContent = "Correct! Well done!";
+        feedback.style.color = "green";
+        nextButton.style.display = "inline-block";
+        resetButton.style.display = "none"; // Hide reset button if correct
+      } else if (userAnswer.length === targetWord.length) {
+        feedback.textContent = "Incorrect! Click Reset to try again.";
+        feedback.style.color = "red";
+        resetButton.style.display = "inline-block"; // Show reset button if incorrect
+      }
+    }
+
+    // Reset the current question
+    function resetCurrentQuestion() {
+      loadQuestion();
+    }
+
+    // Load the next question
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex >= words.length) {
+        document.getElementById('instruction').textContent = "You've completed all the questions! Well done!";
+        document.getElementById('letter-grid').style.display = "none";
+        document.getElementById('answer-grid').style.display = "none";
+        document.getElementById('next-button').style.display = "none";
+        document.getElementById('reset-button').style.display = "none";
+        return;
+      }
+      loadQuestion();
+    }
+
+    // Initialize the game
+    loadQuestion();
+  </script>
+</body>
+</html>

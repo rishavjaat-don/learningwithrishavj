@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Builder Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .game-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 300px;
+    }
+    h1 {
+      color: #4CAF50;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .hint {
+      font-size: 16px;
+      color: #888;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Word Builder Game</h1>
+    <p><strong>Scrambled Word:</strong> <span id="scrambled-word">loading...</span></p>
+
+    <label for="word-input">Enter your guess:</label>
+    <input type="text" id="word-input" placeholder="Type your word" required>
+
+    <button onclick="checkAnswer()">Submit</button>
+
+    <div id="result" class="result"></div>
+    <p id="hint" class="hint"></p>
+  </div>
+
+  <script>
+    // Words, hints, and scrambled versions
+    const words = [
+      { scrambled: "aelpp", correct: "apple", hint: "A fruit that keeps the doctor away." },
+      { scrambled: "nraoge", correct: "orange", hint: "A round citrus fruit." },
+      { scrambled: "tablen", correct: "table", hint: "A piece of furniture with four legs." },
+      { scrambled: "omupterc", correct: "computer", hint: "An electronic device for computing." },
+      { scrambled: "rac", correct: "car", hint: "A vehicle with wheels for travel." },
+      { scrambled: "reefcor", correct: "coffee", hint: "A drink that wakes you up in the morning." },
+      { scrambled: "bnarain", correct: "banana", hint: "A yellow curved fruit." },
+      { scrambled: "sniep", correct: "spine", hint: "The backbone of the human body." },
+      { scrambled: "acbrnig", correct: "crab", hint: "A sea creature with claws." },
+      { scrambled: "trca", correct: "cart", hint: "Used to transport goods or items." }
+    ];
+
+    let currentWordIndex = 0;
+    let score = 0;
+
+    // Function to load a word
+    function loadWord() {
+      const scrambledWord = document.getElementById('scrambled-word');
+      const hint = document.getElementById('hint');
+      scrambledWord.textContent = words[currentWordIndex].scrambled;
+      hint.textContent = words[currentWordIndex].hint;
+      document.getElementById('result').textContent = ''; // Clear previous results
+      document.getElementById('word-input').value = '';   // Clear input
+    }
+
+    // Function to check the user's answer
+    function checkAnswer() {
+      const userInput = document.getElementById('word-input').value.trim().toLowerCase();
+      const correctWord = words[currentWordIndex].correct;
+      const resultDiv = document.getElementById('result');
+
+      if (userInput === correctWord) {
+        score++;
+        resultDiv.textContent = "Correct! 🎉";
+        resultDiv.style.color = "green";
+      } else {
+        resultDiv.textContent = `Oops! The correct word was "${correctWord}".`;
+        resultDiv.style.color = "red";
+      }
+
+      // Move to the next word or end the game
+      currentWordIndex++;
+      if (currentWordIndex < words.length) {
+        setTimeout(loadWord, 2000); // Load the next word after 2 seconds
+      } else {
+        setTimeout(() => {
+          resultDiv.innerHTML = `<strong>Game Over!</strong><br>Your score: ${score} / ${words.length}`;
+          document.getElementById('scrambled-word').textContent = "";
+          document.getElementById('hint').textContent = "";
+        }, 2000);
+      }
+    }
+
+    // Initial load
+    loadWord();
+  </script>
+</body>
+</html>
